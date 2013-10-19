@@ -48,7 +48,10 @@ class LookupChannel(object):
         # this will be however the related objects Manager returns them
         # which is not guaranteed to be the same order they were in when you last edited
         # see OrdredManyToMany.md
-        ids = [int(id) for id in ids]
+        try:
+            ids = [int(id) for id in ids]
+        except TypeError:
+            ids = [int(o.pk) for o in ids]
         things = self.model.objects.in_bulk(ids)
         return [things[aid] for aid in ids if aid in things]
 
